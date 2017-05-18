@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import jsdon from 'jsdon';
+import jsdom from 'jsdom';
 import fs from 'fs';
 
 describe('Our first test', () => {
@@ -9,7 +9,13 @@ describe('Our first test', () => {
 });
 
 describe('test index', () => {
-	it('should say', () => {
-		const index = fs.readFileSync('./index.html', 'utf-8');
+	it('should say', (done) => {
+		const index = fs.readFileSync('./src/index.html', 'utf-8');
+		jsdom.env(index, function(err, window) {
+			const h1 = window.document.getElementsByTagName('h1')[0];
+			expect(h1.innerHTML).to.equal('Users!');
+			done();
+			window.close();
+		});
 	})
 })
